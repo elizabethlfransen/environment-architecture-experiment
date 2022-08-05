@@ -10,5 +10,8 @@ terraform {
 }
 
 module "common_resources" {
-    source = "../common"
+  source             = "../common"
+  name               = var.name
+  location           = var.location
+  vnet_address_range = var.vnet_address_range
 }

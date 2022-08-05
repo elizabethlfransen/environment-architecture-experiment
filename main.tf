@@ -24,7 +24,7 @@ provider "azurerm" {
 }
 provider "azurerm" {
   features {}
-  alias           = "production"
+  alias           = "prod"
   subscription_id = module.prod.subscription.subscription_id
 }
 provider "azurerm" {
@@ -55,6 +55,7 @@ resource "azurerm_subscription" "shared_services_subscription" {
 
 module "shared_resources" {
   source = "./modules/environments/hub"
+  location = var.location
   providers = {
     azurerm = azurerm.shared_resources
   }
@@ -68,6 +69,16 @@ module "dev" {
   billing_scope_id           = var.billing_scope_id
 }
 
+module "dev_resources" {
+  source = "./modules/environments/dev"
+  name = "dev"
+  location = var.location
+  vnet_address_range = "10.1.0.0/16"
+  providers = {
+    azurerm = azurerm.dev
+  }
+}
+
 module "test" {
   source                     = "./modules/management-group-and-subscription"
   environment_id             = "test"
@@ -76,10 +87,30 @@ module "test" {
   billing_scope_id           = var.billing_scope_id
 }
 
+module "test_resources" {
+  source = "./modules/environments/test"
+  name = "test"
+  location = var.location
+  vnet_address_range = "10.2.0.0/16"
+  providers = {
+    azurerm = azurerm.test
+  }
+}
+
 module "prod" {
   source                     = "./modules/management-group-and-subscription"
   environment_id             = "prod"
   environment_name           = "Production"
   parent_management_group_id = azurerm_management_group.parent_group.id
   billing_scope_id           = var.billing_scope_id
+}
+
+module "prod_resources" {
+  source = "./modules/environments/prod"
+  name = "prod"
+  location = var.location
+  vnet_address_range = "10.3.0.0/16"
+  providers = {
+    azurerm = azurerm.prod
+  }
 }
