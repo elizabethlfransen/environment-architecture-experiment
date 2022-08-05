@@ -21,6 +21,23 @@ provider "azurerm" {
   features {}
 }
 
+provider "azurerm" {
+  alias = "test"
+  subscription_id = module.test.subscription.subscription_id
+}
+provider "azurerm" {
+  alias = "dev"
+  subscription_id = module.dev.subscription.subscription_id
+}
+provider "azurerm" {
+  alias = "production"
+  subscription_id = module.prod.subscription.subscription_id
+}
+provider "azurerm" {
+  alias = "shared_resources"
+  subscription_id = azurerm_subscription.shared_services_subscription.subscription.subscription_id
+}
+
 resource "azurerm_management_group" "parent_group" {
   display_name = "Hub"
   name = "mg-hub"
