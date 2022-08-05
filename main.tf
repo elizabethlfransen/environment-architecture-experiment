@@ -56,6 +56,11 @@ resource "azurerm_subscription" "shared_services_subscription" {
 module "shared_resources" {
   source = "./modules/environments/hub"
   location = var.location
+  spoke_network_ids = {
+    "dev" = module.dev_resources.vnet.id
+    "test" = module.test_resources.vnet.id
+    "prod" = module.prod_resources.vnet.id
+  }
   providers = {
     azurerm = azurerm.shared_resources
   }
@@ -74,7 +79,7 @@ module "dev_resources" {
   name = "dev"
   location = var.location
   vnet_address_range = "10.1.0.0/16"
-  hub_network = module.shared_resources.vnet
+  hub_network_id = module.shared_resources.vnet.id
   providers = {
     azurerm = azurerm.dev
   }
@@ -93,7 +98,7 @@ module "test_resources" {
   name = "test"
   location = var.location
   vnet_address_range = "10.2.0.0/16"
-  hub_network = module.shared_resources.vnet
+  hub_network_id = module.shared_resources.vnet.id
   providers = {
     azurerm = azurerm.test
   }
@@ -112,7 +117,7 @@ module "prod_resources" {
   name = "prod"
   location = var.location
   vnet_address_range = "10.3.0.0/16"
-  hub_network = module.shared_resources.vnet
+  hub_network_id = module.shared_resources.vnet.id
   providers = {
     azurerm = azurerm.prod
   }

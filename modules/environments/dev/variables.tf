@@ -14,9 +14,7 @@ variable "location" {
 }
 
 
-variable "hub_network" {
-  type = object({
-    name = string,
-    id = string
-  })
+variable "hub_network_id" {
+    type = string
+    description = "Network id of hub network"
 }

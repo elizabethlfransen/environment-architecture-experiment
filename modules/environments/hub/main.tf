@@ -37,3 +37,11 @@ resource "azurerm_virtual_network" "hub_vnet" {
     Environment = "Shared"
   }
 }
+
+resource "azurerm_virtual_network_peering" "spoke_peers" {
+  for_each = var.spoke_network_ids
+  name = "peer-hub-to-${each.key}"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  virtual_network_name = azurerm_virtual_network.hub_vnet.name
+  remote_virtual_network_id = each.value
+}
