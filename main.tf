@@ -8,39 +8,34 @@ terraform {
 
   required_version = ">= 1.1.0"
 }
-
-locals {
-  environments = {
-    dev  = "Dev"
-    test = "Test"
-    prod = "Production"
-  }
-}
-
 provider "azurerm" {
   features {}
 }
 
 provider "azurerm" {
-  alias = "test"
+  features {}
+  alias           = "test"
   subscription_id = module.test.subscription.subscription_id
 }
 provider "azurerm" {
-  alias = "dev"
+  features {}
+  alias           = "dev"
   subscription_id = module.dev.subscription.subscription_id
 }
 provider "azurerm" {
-  alias = "production"
+  features {}
+  alias           = "production"
   subscription_id = module.prod.subscription.subscription_id
 }
 provider "azurerm" {
-  alias = "shared_resources"
-  subscription_id = azurerm_subscription.shared_services_subscription.subscription.subscription_id
+  features {}
+  alias           = "shared_resources"
+  subscription_id = azurerm_subscription.shared_services_subscription.subscription_id
 }
 
 resource "azurerm_management_group" "parent_group" {
   display_name = "Hub"
-  name = "mg-hub"
+  name         = "mg-hub"
   subscription_ids = [
     azurerm_subscription.shared_services_subscription.subscription_id
   ]
@@ -58,8 +53,15 @@ resource "azurerm_subscription" "shared_services_subscription" {
   }
 }
 
+module "shared_resources" {
+  source = "./modules/environments/hub"
+  providers = {
+    azurerm = azurerm.shared_resources
+  }
+}
+
 module "dev" {
-  source                     = "./modules/environment"
+  source                     = "./modules/management-group-and-subscription"
   environment_id             = "dev"
   environment_name           = "Dev"
   parent_management_group_id = azurerm_management_group.parent_group.id
@@ -67,7 +69,7 @@ module "dev" {
 }
 
 module "test" {
-  source                     = "./modules/environment"
+  source                     = "./modules/management-group-and-subscription"
   environment_id             = "test"
   environment_name           = "Test"
   parent_management_group_id = azurerm_management_group.parent_group.id
@@ -75,7 +77,7 @@ module "test" {
 }
 
 module "prod" {
-  source                     = "./modules/environment"
+  source                     = "./modules/management-group-and-subscription"
   environment_id             = "prod"
   environment_name           = "Production"
   parent_management_group_id = azurerm_management_group.parent_group.id

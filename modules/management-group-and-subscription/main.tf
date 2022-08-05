@@ -1,3 +1,14 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.16"
+    }
+  }
+
+  required_version = ">= 1.1.0"
+}
+
 resource "azurerm_management_group" "parent_group" {
   display_name               = var.environment_name
   name                       = "mg-${var.environment_id}"
