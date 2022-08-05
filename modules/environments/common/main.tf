@@ -14,4 +14,5 @@ module "networking" {
   name               = var.name
   vnet_address_range = var.vnet_address_range
   location           = var.location
+  hub_network        = var.hub_network
 }

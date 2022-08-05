@@ -11,3 +11,17 @@ resource "azurerm_virtual_network" "vnet" {
     "${var.vnet_address_range}"
   ]
 }
+
+resource "azurerm_virtual_network_peering" "peer_spoke_to_hub" {
+  name = "peer-${var.name}-to-hub"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  remote_virtual_network_id = var.hub_network.id
+}
+
+resource "azurerm_virtual_network_peering" "peer_hub_to_spoke" {
+  name = "peer-hub-to-${var.name}"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  virtual_network_name = var.hub_network.name
+  remote_virtual_network_id = azurerm_virtual_network.vnet.id
+}

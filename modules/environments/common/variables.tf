@@ -11,3 +11,11 @@ variable "location" {
   type        = string
   description = "location for resources"
 }
+
+
+variable "hub_network" {
+  type = object({
+    name = string,
+    id = string
+  })
+}

@@ -14,4 +14,5 @@ module "common_resources" {
   name               = var.name
   location           = var.location
   vnet_address_range = var.vnet_address_range
+  hub_network        = var.hub_network
 }
