@@ -1,4 +1,3 @@
-.terraform/
-.terraform.lock.hcl
+.terraform*
+terraform.tfstate*
 configure-terraform.sh
-terraform.tfstate
